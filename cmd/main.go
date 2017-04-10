@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"math/rand"
 	"os"
@@ -12,6 +13,8 @@ import (
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
+const randos = 10000
+
 func main() {
 	filter := bloom.Filter{}
 
@@ -21,19 +24,29 @@ func main() {
 		log.Fatal("Error opening file:", filename, err)
 	}
 
+	fmt.Print("Loading...")
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
 		filter.Add(line)
 	}
+	fmt.Print("done.\n")
 
-	log.Printf("%+v", filter)
+	// log.Printf("%+v", filter)
 	rand.Seed(time.Now().UnixNano())
 
-	for i := 0; i < 10; i++ {
+	found := 0
+	for i := 0; i < randos; i++ {
 		rando := randSeq(5)
-		log.Printf("%s: %v", rando, filter.Check(string(rando)))
+		if filter.Check(string(rando)) {
+			found++
+			fmt.Printf("found = %+v\n", rando)
+		}
+		if i%100 == 0 {
+			fmt.Printf("i = %+v\n", i)
+		}
 	}
+	log.Printf("Found %d of %d: %d%%", found, randos, found/10000)
 
 }
 

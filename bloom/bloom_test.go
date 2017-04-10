@@ -38,3 +38,8 @@ func TestCheck(t *testing.T) {
 		t.Errorf("Expected Check not to find another string")
 	}
 }
+
+func TestHashToIndex(t *testing.T) {
+	h := hash("TestHashToIndex")
+	t.Errorf("h = %+v\n", h)
+}
